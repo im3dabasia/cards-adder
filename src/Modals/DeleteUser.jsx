@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
 import Modal from "./Modal";
+import { showSuccessToast, showErrorToast } from "../Utils/toastUtils";
+
 
 const NewUser = (props) => {
     const [isProcessing, setIsProcessing] = useState(false)
@@ -16,17 +18,21 @@ const NewUser = (props) => {
         e.preventDefault();
         console.log(selectedUser)
 
-        if(selectedUser === "" || selectedUser == null){
-
+        if (selectedUser === "" || selectedUser == null) {
+            showErrorToast("Please Select A User")
             return;
         }
         try {
             const result = await axios.delete(`http://localhost:8002/api/users/${selectedUser}`).then((response) => {
                 console.log(response.data.Message);
+                showSuccessToast(response && response.data && response.data.Message)
+
             }).then(() => {
                 closeModal()
             })
         } catch (error) {
+            showErrorToast("Error in Deleting User")
+
             console.log(error);
         }
     }
@@ -42,18 +48,29 @@ const NewUser = (props) => {
                             <div className="flex flex-wrap -mx-3 mb-6 text-xl text-center">
 
 
-                                    Are you sure you want to delete?
+                                Are you sure you want to delete?
 
                             </div>
+                            <div className='flex flex-row'>
 
-                            <button
-                                type="submit"
-                                onClick={(e) => Submit(e)}
-                                disabled={isProcessing}
-                                className={`${isProcessing ? " bg-gray-500 hover:bg-gray-700" : "bg-blue-500 hover:bg-blue-700"} flex mx-auto  text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out`}
-                            >
-                                Submit
-                            </button>
+                                <button
+                                    type="submit"
+                                    onClick={closeModal}
+                                    disabled={isProcessing}
+                                    className={`${isProcessing ? " bg-gray-500 hover:bg-gray-700" : "bg-gray-500 hover:bg-gray-700"} mr-2 flex mx-auto  text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out`}
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    onClick={(e) => Submit(e)}
+                                    disabled={isProcessing}
+                                    className={`${isProcessing ? " bg-gray-500 hover:bg-gray-700" : "bg-blue-500 hover:bg-blue-700"} flex mx-auto  text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out`}
+                                >
+                                    Submit
+                                </button>
+                            </div>
                         </form>
                         <button
                             className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"

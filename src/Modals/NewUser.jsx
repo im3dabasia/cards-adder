@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
 import Modal from "./Modal";
+import { showSuccessToast, showErrorToast } from "../Utils/toastUtils";
+
 
 
 const NewUser = (props) => {
     const [isProcessing, setIsProcessing] = useState(false)
     const modalOpen = props.modalOpen;
     const setModalOpen = props.setModalOpen;
-    const [positions, setPositions] = useState([])
+    const positions = props.positions
+    const position = props.position
+    const setPosition = props.setPosition
 
     //data
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [date, setDate] = useState("");
-    const [position, setPosition] = useState("");
 
     const closeModal = () => {
         setModalOpen(false);
@@ -27,7 +30,8 @@ const NewUser = (props) => {
         setDate("")
     }
 
-    const Submit = async () => {
+    const Submit = async (e) => {
+        e.preventDefault();
         const data = {
             firstName,
             lastName,
@@ -39,6 +43,7 @@ const NewUser = (props) => {
             const result = await axios.post('http://localhost:8002/api/users/', data).then((response) => {
 
                 console.log(response.data.Message);
+                showSuccessToast(response && response.data && response.data.Message)
             }).then(() => {
                 clearData()
                 closeModal()
@@ -46,25 +51,12 @@ const NewUser = (props) => {
             })
         } catch (error) {
             console.log(error);
+            showErrorToast("Error in Creating User")
+
         }
     }
 
-    const getPositions = async () => {
-        try {
-            const result = await axios.get('http://localhost:8002/api/position/').then((response) => {
 
-                setPositions(response.data)
-                setPosition(response.data[0])
-            })
-            console.log(result)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getPositions();
-    }, [])
     return (
         <div>
             <Modal isOpen={modalOpen} onClose={closeModal} className="mt-12">
@@ -153,7 +145,7 @@ const NewUser = (props) => {
                             </div>
                             <button
                                 type="submit"
-                                onClick={Submit}
+                                onClick={(e) => Submit(e)}
                                 disabled={isProcessing}
                                 className={`${isProcessing ? " bg-gray-500 hover:bg-gray-700" : "bg-blue-500 hover:bg-blue-700"} flex mx-auto  text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out`}
                             >

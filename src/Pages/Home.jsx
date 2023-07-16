@@ -6,8 +6,8 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 
 import Card from "../Components/Card"
 import NewUser from "../Modals/NewUser";
+import NewPosition from "../Modals/NewPosition";
 import DeleteUser from "../Modals/DeleteUser";
-
 
 const Home = () => {
 
@@ -15,6 +15,12 @@ const Home = () => {
     const [loading, setLoading] = React.useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOpen1, setModalOpen1] = useState(false);
+    const [modalOpen2, setModalOpen2] = useState(false);
+
+    const [positions, setPositions] = useState([])
+    const [position, setPosition] = useState("");
+
+
     const [selectedUser, setSelectedUser] = useState("")
 
     const icon = <BiSolidUserCircle />
@@ -24,6 +30,21 @@ const Home = () => {
     }
     const openDeleteUser = () => {
         setModalOpen1(true);
+    }
+    const openNewPosition = () => {
+        setModalOpen2(true);
+    }
+    const getPositions = async () => {
+        try {
+            const result = await axios.get('http://localhost:8002/api/position/').then((response) => {
+
+                setPositions(response.data)
+                setPosition(response.data[0])
+            })
+            console.log(result)
+        } catch (error) {
+            console.log(error);
+        }
     }
     const fetchData = async () => {
         try {
@@ -40,15 +61,13 @@ const Home = () => {
 
     useEffect(() => {
         fetchData();
-    }, [modalOpen])
+        getPositions()
+    }, [modalOpen, modalOpen1, modalOpen2])
 
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-
             <div className="flex mt-20 px-5 flex-wrap justify-start w-100 animate-slide-out">
-
                 {users.map((user) => (
-
                     <Card
                         key={user._id}
                         firstName={user.firstName}
@@ -70,15 +89,53 @@ const Home = () => {
                     />
                 </button>
             </div>
+            <div
+                style={{
+                    float: "right",
+                    marginRight: "20px",
+                    paddingTop: "15px",
+                }}
+            >
+                <div
+                    className=" flex justify-end px-3"
+                    style={{
+                        position: "fixed",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        zIndex: 9999,
+                        padding: "10px"
+                    }}
+                >
+
+                    <button
+                        className="
+                fixed bottom-5 right-24 bg-blue-500 hover:drop-shadow-xl text-white
+                font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg
+              "
+                        onClick={openNewPosition}
+                    >
+                        Add Position
+                    </button>
+                </div>
+            </div>
             <NewUser
                 modalOpen={modalOpen}
                 setModalOpen={setModalOpen}
                 fetchData={fetchData}
+                positions={positions}
+                position={position}
+                setPosition={setPosition}
             />
             <DeleteUser
                 modalOpen1={modalOpen1}
                 setModalOpen1={setModalOpen1}
                 selectedUser={selectedUser}
+            />
+            <NewPosition
+                modalOpen2={modalOpen2}
+                setModalOpen2={setModalOpen2}
+                fetchData={fetchData}
             />
 
         </div >
