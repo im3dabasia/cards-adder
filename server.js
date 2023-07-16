@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./Utils/ConfigDB');
 const cors = require('cors')
-const Router = require('./Routes/routes.js')
+const Router = require('./Routes/Main.js')
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -20,6 +20,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 connectDB();
 app.use('/api', Router)
+
 
 
 const PORT = process.env.PORT || 8000;
