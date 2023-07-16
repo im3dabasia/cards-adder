@@ -1,13 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../Models/User');
+const UserController = require("../Controllers/User")
 
-router.get('/all', async (req, res) => {
-    // console.log("new sending users")
-    const allusers = await User.find({}).populate("position");
-
-    res.json({"1":"2"})
-
-})
+router.get('/all',UserController.getAllUsers)
 
 module.exports = router;
