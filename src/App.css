@@ -37,3 +37,24 @@
   }
 }
 
+.icon {
+  /* Set initial position */
+  position: relative;
+  left: 0;
+}
+
+.icon:hover {
+  /* Apply animation on hover */
+  animation: bounce 0.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    /* Start and end position */
+    transform: translateX(0);
+  }
+  50% {
+    /* Middle position */
+    transform: translateX(10px); /* Adjust the value as per your preference */
+  }
+}

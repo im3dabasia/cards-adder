@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { BiSolidUserCircle } from 'react-icons/bi';
 import { BsPersonFillAdd } from 'react-icons/bs';
@@ -7,19 +6,24 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 
 import Card from "../Components/Card"
 import NewUser from "../Modals/NewUser";
+import DeleteUser from "../Modals/DeleteUser";
+
 
 const Home = () => {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = React.useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen1, setModalOpen1] = useState(false);
+    const [selectedUser, setSelectedUser] = useState("")
 
     const icon = <BiSolidUserCircle />
 
-    const navigate = useNavigate();
-
     const openAddNewUser = () => {
         setModalOpen(true);
+    }
+    const openDeleteUser = () => {
+        setModalOpen1(true);
     }
     const fetchData = async () => {
         try {
@@ -40,7 +44,24 @@ const Home = () => {
 
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+
             <div className="flex mt-20 px-5 flex-wrap justify-start w-100 animate-slide-out">
+
+                {users.map((user) => (
+
+                    <Card
+                        key={user._id}
+                        firstName={user.firstName}
+                        lastName={user.lastName}
+                        email={user.email}
+                        startDate={user.startDate}
+                        icon={icon}
+                        id={user._id}
+                        openDeleteUser={openDeleteUser}
+                        setSelectedUser={setSelectedUser}
+                    />
+
+                ))}
                 <button onClick={openAddNewUser}>
                     <Card
                         firstName="Add New User"
@@ -48,29 +69,19 @@ const Home = () => {
 
                     />
                 </button>
-                {users.map((user) => (
-                    <div
-                        className="mr-5 hover:scale-105 transform transition duration-300 cursor-pointer"
-                        key={user._id}
-                    >
-                        <div>
-                            <Card
-                                firstName={user.firstName}
-                                lastName={user.lastName}
-                                email={user.email}
-                                startDate={user.startDate}
-                                icon={icon}
-                            />
-                        </div>
-                    </div>
-                ))}
             </div>
             <NewUser
                 modalOpen={modalOpen}
                 setModalOpen={setModalOpen}
                 fetchData={fetchData}
             />
-        </div>
+            <DeleteUser
+                modalOpen1={modalOpen1}
+                setModalOpen1={setModalOpen1}
+                selectedUser={selectedUser}
+            />
+
+        </div >
     )
 
 };
