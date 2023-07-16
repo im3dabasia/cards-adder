@@ -8,13 +8,13 @@ const UserController = {
         try {
             const allusers = await User.find({}).populate("position");
             res.json(allusers)
-            
+
         } catch (error) {
             res.status(500).json({ error: 'An error occurred' });
         }
     },
     postNewUser: async (req, res) => {
-        // console.log("making new users")
+        // console.log("making new user")
         try {
 
             const newUser = new User({
@@ -35,8 +35,20 @@ const UserController = {
             res.status(500).json({ error: 'An error occurred' });
         }
 
+    },
+    removeUser: async (req, res) => {
+        const { id } = req.params
+        console.log(id)
 
-
+        try {
+            const user = await User.findByIdAndDelete(id);
+            res.json({
+                Message: "User Deleted Successfully",
+                Position: user
+            });
+        } catch (error) {
+            res.status(500).json({ error: 'An error occurred' });
+        }
     }
 }
 
