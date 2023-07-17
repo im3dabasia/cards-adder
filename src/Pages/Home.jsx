@@ -66,7 +66,7 @@ const Home = () => {
 
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-            <div className="flex mt-20 px-5 flex-wrap justify-start w-100 animate-slide-out">
+            <div className=" animate-slide-in-1 flex mt-20 px-5 flex-wrap justify-start w-100 ">
                 {users.map((user) => (
                     <Card
                         key={user._id}

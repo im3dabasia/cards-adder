@@ -46,8 +46,8 @@ const NewUser = (props) => {
                 showSuccessToast(response && response.data && response.data.Message)
             }).then(() => {
                 clearData()
+                props.fetchData()
                 closeModal()
-
             })
         } catch (error) {
             console.log(error);
