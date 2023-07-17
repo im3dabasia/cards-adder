@@ -18,8 +18,8 @@ const UserController = {
         try {
 
             const newUser = new User({
-                firstName: req.body.username,
-                lastName: req.body.password,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
                 email: req.body.email,
                 startDate: req.body.startDate,
                 position: req.body.position
@@ -38,7 +38,7 @@ const UserController = {
     },
     removeUser: async (req, res) => {
         const { id } = req.params
-        console.log(id)
+        // console.log(id)
 
         try {
             const user = await User.findByIdAndDelete(id);
